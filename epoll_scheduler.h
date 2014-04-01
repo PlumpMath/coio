@@ -1,12 +1,12 @@
 /*
- * netcoro.h
+ * epoll_scheduler.h
  *
  *  Created on: 2012-11-17
  *      Author: yelu
  */
 
-#ifndef EPOLL_CORO_H_
-#define EPOLL_CORO_H_
+#ifndef EPOLL_SCHEDULER_H_
+#define EPOLL_SCHEDULER_H_
 
 #include <sys/types.h>
 #include <stdio.h>
@@ -23,47 +23,39 @@
 #include "log.h"
 #include "coro.h"
 
-class io_coro_t;
+class coro;
 
 #define MAX_EVENTS 64
 
-typedef io_coro_t* (*IO_CORO_MAKER)();
+typedef coro* (*CORO_MAKER)();
 
 /**
  * @brief a corontine scheduler implenmentation for network io(use epoll).
  */
-class epoll_coro_t:public coro_t
+class epoll_scheduler:public coro
 {
 public:
 
-	typedef boost::function<void(int, epoll_coro_t*)> NEW_CONN_CALLBACK;
+	typedef boost::function<void(int, epoll_scheduler*)> NEW_CONN_CALLBACK;
 
-	epoll_coro_t(int listen_port);
-	virtual ~epoll_coro_t();
+	epoll_scheduler();
+	virtual ~epoll_scheduler();
 
-	int run(NEW_CONN_CALLBACK& new_conn_callback);
+	int monitor_read_once(int fd, coro* io_coro);
 
-	int monitor_read_once(int fd, io_coro_t* io_coro);
-
-	int monitor_write_once(int fd, io_coro_t* io_coro);
+	int monitor_write_once(int fd, coro* io_coro);
 
 	void callback(){}
 
+	void run();
+
+	static int make_fd_non_blocking(int fd);
+
 private:
 
-	static int _create_and_bind(int port);
-	static int _make_socket_non_blocking(int sfd);
-
-	void _run_event_loop();
-	int _accept_new_conn() throw();
-	int _handle_new_conn(int) throw();
-
-	int _listen_fd;
-	int _listen_port;
 	int _epollfd;
 	struct epoll_event* _events;	/* Buffer where events are returned */
-	std::map<int, io_coro_t*> _io_coro_map;
-	NEW_CONN_CALLBACK _new_conn_callback;
+	std::map<int, coro*> _coro_map;
 };
 
 #endif /* EPOLL_CORO_H_ */

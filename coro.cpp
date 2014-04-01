@@ -28,7 +28,7 @@ coro::~coro()
 void coro_callback(intptr_t p)
 {
 	LOG_DEBUG("enter callback.");
-	coro_t* pcoro = (coro_t*)p;
+	coro* pcoro = (coro*)p;
 	LOG_DEBUG("pcoro=%p", pcoro);
 	pcoro->callback();
 	LOG_DEBUG("callback end.");
