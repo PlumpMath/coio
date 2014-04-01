@@ -22,20 +22,20 @@ using boost::context::fcontext_t;
 /**
  * @brief a coroutine implementation.
  */
-class coro_t
+class coro
 {
 public:
-	coro_t();
-	virtual ~coro_t();
+	coro();
+	virtual ~coro();
 
 	/*
 	 * @brief initialize the ucontext_t structure (data member) to the current
 	 * user context of the calling thread. then create a new stack for future use.
 	 */
-	void declare_as_child(coro_t& switch_to_when_return,
+	void declare_as_child(coro& switch_to_when_return,
 			    uint32_t stack_size = DEFAULT_CORO_STACK_SIZE);
 
-	void switch_to(coro_t& to_coro);
+	void switch_to(coro& to_coro);
 	void yield();
 	//virtual void callback() = 0;
 	virtual void callback()
@@ -47,7 +47,7 @@ private:
 	boost::coroutines::detail::stack_allocator _alloc;
 	uint32_t _stack_size;
 	void* _stack;
-	coro_t* _caller;
+	coro* _caller;
 
 	fcontext_t* _context;
 };

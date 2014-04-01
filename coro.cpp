@@ -10,7 +10,7 @@
 #include "log.h"
 #include <signal.h>
 
-coro_t::coro_t()
+coro::coro()
 {
 	_context = NULL;
 	_stack_size = 0;
@@ -18,7 +18,7 @@ coro_t::coro_t()
 	_caller = NULL;
 }
 
-coro_t::~coro_t()
+coro::~coro()
 {
 	LOG(DEBUG, "enter destructor.");
 	_alloc.deallocate(_stack, _stack_size);
@@ -35,7 +35,7 @@ void coro_callback(intptr_t p)
 	return;
 }
 
-void coro_t::declare_as_child(coro_t& switch_to_when_return,
+void coro::declare_as_child(coro& switch_to_when_return,
 		uint32_t stack_size)
 {
 	_stack = _alloc.allocate(stack_size);
@@ -52,14 +52,14 @@ void coro_t::declare_as_child(coro_t& switch_to_when_return,
 #endif
 }
 
-void coro_t::switch_to(coro_t& to_coro)
+void coro::switch_to(coro& to_coro)
 {
 	to_coro._caller = this;
 	LOG_DEBUG("switch coroutine[from:%p][to:%p].", this, &to_coro);
 	boost::context::jump_fcontext(_context, to_coro._context, 0);
 }
 
-void coro_t::yield()
+void coro::yield()
 {
 	//fcontext_jump(&(this->_context), &(_caller->_context), 0);
 }
