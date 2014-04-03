@@ -25,6 +25,9 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.413457523" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1635068998" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/boost"/>
+									<listOptionValue builtIn="false" value="&quot;C:\cygwin64\usr\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\cygwin64\usr\include\boost&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\cygwin64\lib\gcc\x86_64-pc-cygwin\4.8.2\include&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.565191604" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>

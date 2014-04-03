@@ -27,15 +27,6 @@
 #define COMLOG_NOTICE 0
 #define COMLOG_FATAL 3
 
-inline void com_writelog(int level, const char* format, const char* file, uint line, char* function, ...)
-{
-	va_list _va_list;
-	va_start(_va_list, format);
-	printf(format, file, line, function, _va_list);
-	va_end(_va_list);
-	return;
-}
-
 #define LOG(_level_, _fmt_, args...) \
     do\
     {\

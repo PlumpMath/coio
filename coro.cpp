@@ -10,12 +10,20 @@
 #include "log.h"
 #include <signal.h>
 
-coro::coro()
+coro::coro(uint32_t stack_size)
 {
-	_context = NULL;
-	_stack_size = 0;
-	_stack = NULL;
-	_caller = NULL;
+	_stack = _alloc.allocate(stack_size);
+	_stack_size = stack_size;
+	_context = boost::context::make_fcontext(_stack, _stack_size, coro_callback);
+	LOG_DEBUG("[stack size:%d]", _stack_size);
+
+		// Swapping stacks makes tools like Valgrind get pretty crazy. Lwan��s
+		// implementation uses Valgrind-provided macros that marks the newly-allocated
+		// blocks (from the heap) as stacks.
+	#ifdef USE_VALGRIND
+		coro->vg_stack_id = VALGRIND_STACK_REGISTER(this->_stack, this->_stack +
+				                                    _stack_size);
+	#endif
 }
 
 coro::~coro()

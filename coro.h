@@ -10,7 +10,6 @@
 
 #include <unistd.h>
 #include <stdint.h>
-#include <stdexcept>
 #include <context/all.hpp>
 #include <coroutine/all.hpp>
 #include "log.h"
@@ -25,7 +24,7 @@ using boost::context::fcontext_t;
 class coro
 {
 public:
-	coro();
+	coro(uint32_t stack_size = DEFAULT_CORO_STACK_SIZE);
 	virtual ~coro();
 
 	/*
