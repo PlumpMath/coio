@@ -38,9 +38,31 @@ int epoll_scheduler::monitor_read_once(int fd, coro* io_coro)
 	}
 	struct epoll_event event;
 	event.data.fd = fd;
-	// monite read event on socket.
+	// monitor read event on socket.
 	event.events = EPOLLIN | EPOLLONESHOT;
 	if (-1 == epoll_ctl(_epollfd, EPOLL_CTL_MOD, fd, &event))
+	{
+		LOG_WARNING("epoll_ctl failed[fd:%d][err %d:%s].", _epollfd, errno,
+				strerror(errno));
+		return -1;
+	}
+	// add <fd, io_coro_t*> pair to map.
+	_coro_map[fd] = io_coro;
+	return 0;
+}
+
+int epoll_scheduler::monitor_read_continously(int fd, coro* io_coro)
+{
+	if(-1 == _epollfd || NULL == io_coro || fd < 0)
+	{
+		LOG_WARNING("wrong params[fd:%d][io_coro_t:%p].", fd, io_coro);
+		return -1;
+	}
+	struct epoll_event event;
+	event.data.fd = fd;
+	// monitor read event on socket.
+	event.events = EPOLLIN;
+	if (-1 == epoll_ctl(_epollfd, EPOLL_CTL_ADD, fd, &event))
 	{
 		LOG_WARNING("epoll_ctl failed[fd:%d][err %d:%s].", _epollfd, errno,
 				strerror(errno));

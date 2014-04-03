@@ -43,6 +43,8 @@ public:
 
 	int monitor_read_once(int fd, coro* io_coro);
 
+	int monitor_read_continously(int fd, coro* io_coro);
+
 	int monitor_write_once(int fd, coro* io_coro);
 
 	void callback(){}
